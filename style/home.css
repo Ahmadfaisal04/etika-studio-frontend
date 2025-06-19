@@ -1,0 +1,19 @@
+
+        /* Hilangkan warna biru & garis bawah di tanggal */
+        .fc-daygrid-day-number {
+            color: #212529 !important; /* warna hitam biasa */
+            text-decoration: none !important;
+        }
+        /* Saat hover tetap tidak ada underline */
+        .fc-daygrid-day-number:hover {
+            color: #0d6efd !important;
+            text-decoration: none !important;
+            cursor: pointer;
+        }
+        /* Styling tulisan hari (Sen, Sel, Rab, dst.) */
+        .fc-col-header-cell-cushion {
+            color: #495057 !important;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+        }
