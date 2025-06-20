@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Cek token login
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        window.location.href = 'login.html';
-        return;
-    }
+    // // Cek token login
+    // const token = localStorage.getItem('authToken');
+    // if (!token) {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
     const calendarEl = document.getElementById('calendar');
 
@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const url = `http://localhost:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
                 const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
-                    }
+                    // headers: {
+                    //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
+                    // }
                 });
                 if (!response.ok) {
                     failureCallback('Fetch failed: ' + response.status);
@@ -114,9 +114,9 @@ Date = new Date(info.dateStr);
         try {
             const response = await fetch('http://localhost:8080/api/reservations', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
-                },
+                // headers: {
+                //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
+                // },
                 body: formData
             });
 
