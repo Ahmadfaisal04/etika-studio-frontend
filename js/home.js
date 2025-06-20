@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         events: async function(fetchInfo, successCallback, failureCallback) {
             try {
                 const dateParam = fetchInfo.startStr.substring(0, 10);
-                const url = `http://103.84.207.100:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
+                const url = `http://103.84.207.100/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
                 const response = await fetch(url, {
                     // headers: {
@@ -71,7 +71,7 @@ Date = new Date(info.dateStr);
             document.getElementById('detail_participants').textContent = event.extendedProps.participants || '-';
             const imageElement = document.getElementById('detail_image');
             if (event.extendedProps.image_url) {
-                imageElement.src = `http://103.84.207.100:8080/${event.extendedProps.image_url}`;
+                imageElement.src = `http://103.84.207.100/${event.extendedProps.image_url}`;
                 imageElement.style.display = 'block';
             } else {
                 imageElement.style.display = 'none';
@@ -112,7 +112,7 @@ Date = new Date(info.dateStr);
         }
 
         try {
-            const response = await fetch('http://103.84.207.100:8080/api/reservations', {
+            const response = await fetch('http://103.84.207.100/api/reservations', {
                 method: 'POST',
                 // headers: {
                 //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
