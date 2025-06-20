@@ -18,7 +18,7 @@
 })();
 
 async function loginUser(username, password) {
-    const url = 'http://192.168.1.110:8080/api/login';
+    const url = 'http://localhost:8080/api/login';
     const data = { username, password };
 
     try {

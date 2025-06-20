@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Cek token login
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     const calendarEl = document.getElementById('calendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -10,9 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
         events: async function(fetchInfo, successCallback, failureCallback) {
             try {
                 const dateParam = fetchInfo.startStr.substring(0, 10);
-                const url = `http://192.168.1.110:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
+                const url = `http://localhost:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
+                    }
+                });
                 if (!response.ok) {
                     failureCallback('Fetch failed: ' + response.status);
                     return;
@@ -20,12 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const data = await response.json();
                 const events = (data || []).map(item => ({
-                    title: item.CustomerName,
+                    title: item.EventName,
                     start: item.ReservedDate,
                     allDay: true,
                     extendedProps: {
-                        email: item.Email,
-                        notes: item.Notes
+                        participants: item.Participants,
+                        image_url: item.ImageURL
                     }
                 }));
 
@@ -36,7 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         dateClick: function(info) {
-            const clickedDate = new Date(info.dateStr);
+            // const clicked
+
+Date = new Date(info.dateStr);
             const today = new Date();
             clickedDate.setHours(0, 0, 0, 0);
             today.setHours(0, 0, 0, 0);
@@ -55,7 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const event = info.event;
 
             document.getElementById('detail_name').textContent = event.title || '-';
-            document.getElementById('detail_notes').textContent = event.extendedProps.notes || '-';
+            document.getElementById('detail_participants').textContent = event.extendedProps.participants || '-';
+            const imageElement = document.getElementById('detail_image');
+            if (event.extendedProps.image_url) {
+                imageElement.src = `http://localhost:8080/${event.extendedProps.image_url}`;
+                imageElement.style.display = 'block';
+            } else {
+                imageElement.style.display = 'none';
+                imageElement.src = '';
+            }
+
             const modal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
             modal.show();
         }
@@ -66,19 +88,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('reservationForm');
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const formData = {
-            reserved_date: document.getElementById('reserved_date').value,
-            customer_name: document.getElementById('customer_name').value,
-            phone_number: document.getElementById('phone_number').value,
-            email: document.getElementById('email').value,
-            notes: document.getElementById('notes').value
-        };
+
+        // Buat FormData untuk mengirim data termasuk file
+        const formData = new FormData();
+        formData.append('reserved_date', document.getElementById('reserved_date').value);
+        formData.append('event_name', document.getElementById('event_name').value);
+        formData.append('participants', document.getElementById('participants').value);
+
+        const imageFile = document.getElementById('image').files[0];
+        if (imageFile) {
+            // Validasi ukuran file (max 10MB)
+            if (imageFile.size > 10 * 1024 * 1024) {
+                alert('Ukuran gambar tidak boleh lebih dari 10MB.');
+                return;
+            }
+            // Validasi tipe file
+            const allowedTypes = ['image/jpeg', 'image/png'];
+            if (!allowedTypes.includes(imageFile.type)) {
+                alert('Hanya file JPG atau PNG yang diizinkan.');
+                return;
+            }
+            formData.append('image', imageFile);
+        }
+
         try {
-            const response = await fetch('http://192.168.1.110:8080/api/reservations', {
+            const response = await fetch('http://localhost:8080/api/reservations', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                headers: {
+                    'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
+                },
+                body: formData
             });
+
             if (response.ok) {
                 alert('Reservasi berhasil ditambahkan!');
                 form.reset();
@@ -87,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendar.refetchEvents();
             } else {
                 const errorData = await response.json();
-                alert('Gagal menambahkan reservasi: ' + (errorData.message || response.status));
+                alert('Gagal menambahkan reservasi: ' + (errorData.message || response.statusText));
             }
         } catch (error) {
             console.error('Error posting reservation:', error);
@@ -95,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Handle tombol tambah reservasi (opsional)
     const addReservationBtn = document.getElementById('addReservationBtn');
     if (addReservationBtn) {
         addReservationBtn.addEventListener('click', function() {
@@ -102,6 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
             today.setHours(0, 0, 0, 0);
             document.getElementById('reserved_date').setAttribute('min', today.toISOString().split('T')[0]);
             document.getElementById('reserved_date').value = today.toISOString().split('T')[0];
+            const modal = new bootstrap.Modal(document.getElementById('reservationModal'));
+            modal.show();
         });
     }
 });
