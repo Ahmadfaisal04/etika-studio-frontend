@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // // Cek token login
-    // const token = localStorage.getItem('authToken');
-    // if (!token) {
-    //     window.location.href = 'login.html';
-    //     return;
-    // }
-
     const calendarEl = document.getElementById('calendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -19,11 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dateParam = fetchInfo.startStr.substring(0, 10);
                 const url = `https://etika.studio/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
-                const response = await fetch(url, {
-                    // headers: {
-                    //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
-                    // }
-                });
+                const response = await fetch(url);
                 if (!response.ok) {
                     failureCallback('Fetch failed: ' + response.status);
                     return;
@@ -80,56 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
-
-    const form = document.getElementById('reservationForm');
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        // Buat FormData untuk mengirim data termasuk file
-        const formData = new FormData();
-        formData.append('reserved_date', document.getElementById('reserved_date').value);
-        formData.append('event_name', document.getElementById('event_name').value);
-
-        const imageFile = document.getElementById('image').files[0];
-        if (imageFile) {
-            // Validasi ukuran file (max 10MB)
-            if (imageFile.size > 10 * 1024 * 1024) {
-                alert('Ukuran gambar tidak boleh lebih dari 10MB.');
-                return;
-            }
-            // Validasi tipe file
-            const allowedTypes = ['image/jpeg', 'image/png'];
-            if (!allowedTypes.includes(imageFile.type)) {
-                alert('Hanya file JPG atau PNG yang diizinkan.');
-                return;
-            }
-            formData.append('image', imageFile);
-        }
-
-        try {
-            const response = await fetch('https://etika.studio/api/reservations', {
-                method: 'POST',
-                // headers: {
-                //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
-                // },
-                body: formData
-            });
-
-            if (response.ok) {
-                alert('Reservasi berhasil ditambahkan!');
-                form.reset();
-                const modal = bootstrap.Modal.getInstance(document.getElementById('reservationModal'));
-                modal.hide();
-                calendar.refetchEvents();
-            } else {
-                const errorData = await response.json();
-                alert('Gagal menambahkan reservasi: ' + (errorData.message || response.statusText));
-            }
-        } catch (error) {
-            console.error('Error posting reservation:', error);
-            alert('Terjadi kesalahan saat mengirim data.');
-        }
-    });
 
     // Handle tombol tambah reservasi (opsional)
     const addReservationBtn = document.getElementById('addReservationBtn');
