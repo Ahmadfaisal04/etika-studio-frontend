@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         events: async function(fetchInfo, successCallback, failureCallback) {
             try {
                 const dateParam = fetchInfo.startStr.substring(0, 10);
-                const url = `https://etika.studio/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
+                const url = `http://localhost:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
                 const response = await fetch(url, {
                     // headers: {
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     start: item.ReservedDate,
                     allDay: true,
                     extendedProps: {
-                        participants: item.Participants,
                         image_url: item.ImageURL
                     }
                 }));
@@ -47,9 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         dateClick: function(info) {
-            // const clicked
-
-Date = new Date(info.dateStr);
+            const clickedDate = new Date(info.dateStr);
             const today = new Date();
             clickedDate.setHours(0, 0, 0, 0);
             today.setHours(0, 0, 0, 0);
@@ -68,10 +65,9 @@ Date = new Date(info.dateStr);
             const event = info.event;
 
             document.getElementById('detail_name').textContent = event.title || '-';
-            document.getElementById('detail_participants').textContent = event.extendedProps.participants || '-';
             const imageElement = document.getElementById('detail_image');
             if (event.extendedProps.image_url) {
-                imageElement.src = `https://etika.studio/${event.extendedProps.image_url}`;
+                imageElement.src = `http://localhost:8080/${event.extendedProps.image_url}`;
                 imageElement.style.display = 'block';
             } else {
                 imageElement.style.display = 'none';
@@ -93,7 +89,6 @@ Date = new Date(info.dateStr);
         const formData = new FormData();
         formData.append('reserved_date', document.getElementById('reserved_date').value);
         formData.append('event_name', document.getElementById('event_name').value);
-        formData.append('participants', document.getElementById('participants').value);
 
         const imageFile = document.getElementById('image').files[0];
         if (imageFile) {
@@ -112,7 +107,7 @@ Date = new Date(info.dateStr);
         }
 
         try {
-            const response = await fetch('https://etika.studio/api/reservations', {
+            const response = await fetch('http://localhost:8080/api/reservations', {
                 method: 'POST',
                 // headers: {
                 //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan

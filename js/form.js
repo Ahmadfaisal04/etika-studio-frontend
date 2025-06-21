@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append('reserved_date', document.getElementById('reserved_date').value);
         formData.append('event_name', document.getElementById('event_name').value);
-        formData.append('participants', document.getElementById('participants').value);
         
         const imageFile = document.getElementById('image').files[0];
         if (imageFile) {
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('https://etika.studio/api/reservations', {
+            const response = await fetch('http://localhost:8080/api/reservations', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}` // Tambahkan token jika endpoint memerlukan autentikasi

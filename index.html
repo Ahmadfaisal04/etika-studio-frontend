@@ -14,6 +14,113 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style/home.css" />
+  <!-- Inline CSS for Modal Styling -->
+  <style>
+    .modal-content {
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      padding: 1.5rem;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 1rem 1.5rem;
+      background-color: #f8f9fa;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+      padding: 0.75rem;
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    .btn-close {
+      opacity: 0.7;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .btn-close:hover {
+      opacity: 1;
+    }
+
+    .modal.fade .modal-dialog {
+      transform: translateY(-50px);
+      transition: transform 0.3s ease-out;
+    }
+
+    .modal.show .modal-dialog {
+      transform: translateY(0);
+    }
+
+    #detail_image_container {
+      text-align: center;
+    }
+
+    #detail_image {
+      border-radius: 6px;
+      border: 1px solid #dee2e6;
+      padding: 5px;
+    }
+
+    @media (max-width: 576px) {
+      .modal-dialog {
+        margin: 0.5rem;
+      }
+
+      .modal-content {
+        border-radius: 8px;
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 
 <body class="bg-light">
@@ -31,7 +138,6 @@
     </div>
   </nav>
 
-
   <div class="container py-4">
     <h1 class="mb-3">📅 Reservasi Cafe</h1>
 
@@ -40,43 +146,36 @@
   </div>
 
   <!-- Modal Form Tambah Reservasi -->
-  <!-- <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form id="reservationForm">
-              <div class="modal-header">
-                <h5 class="modal-title" id="reservationModalLabel">Tambah Reservasi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="mb-3">
-                      <label for="reserved_date" class="form-label">Tanggal Reservasi</label>
-                      <input type="date" class="form-control" id="reserved_date" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="customer_name" class="form-label">Nama Pelanggan</label>
-                      <input type="text" class="form-control" id="customer_name" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="phone_number" class="form-label">Nomor HP</label>
-                      <input type="text" class="form-control" id="phone_number" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="email" class="form-label">Email</label>
-                      <input type="email" class="form-control" id="email">
-                  </div>
-                  <div class="mb-3">
-                      <label for="notes" class="form-label">Catatan</label>
-                      <textarea class="form-control" id="notes" rows="2"></textarea>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Tambah Reservasi</button>
-              </div>
-          </form>
-        </div>
+  <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="reservationForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reservationModalLabel">Tambah Reservasi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="reserved_date" class="form-label">Tanggal Reservasi</label>
+              <input type="date" class="form-control" id="reserved_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="event_name" class="form-label">Nama Acara</label>
+              <input type="text" class="form-control" id="event_name" required>
+            </div>
+            <div class="mb-3">
+              <label for="image" class="form-label">Gambar Acara (opsional)</label>
+              <input type="file" class="form-control" id="image" accept="image/jpeg,image/png">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Tambah Reservasi</button>
+          </div>
+        </form>
       </div>
-    </div> -->
+    </div>
+  </div>
 
   <!-- Modal Detail Event -->
   <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel"
@@ -89,11 +188,13 @@
         </div>
         <div class="modal-body">
           <p><strong>Nama Acara:</strong> <span id="detail_name"></span></p>
-          <p><strong>Jumlah Peserta:</strong> <span id="detail_participants"></span></p>
           <p><strong>Gambar:</strong></p>
           <div id="detail_image_container">
-            <img id="detail_image" src="" alt="Gambar Acara" style="max-width: 100%; max-height: 200px; display: none;">
+            <img id="detail_image" src="" alt="Gambar Acara" style="max-width: 100%; max-height: 200px;">
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         </div>
       </div>
     </div>
