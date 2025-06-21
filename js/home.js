@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         events: async function(fetchInfo, successCallback, failureCallback) {
             try {
                 const dateParam = fetchInfo.startStr.substring(0, 10);
-                const url = `http://localhost:8080/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
+                const url = `https://etika.studio/api/reservations/range?start=${dateParam}&end=${fetchInfo.endStr.substring(0, 10)}`;
 
                 const response = await fetch(url, {
                     // headers: {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('detail_name').textContent = event.title || '-';
             const imageElement = document.getElementById('detail_image');
             if (event.extendedProps.image_url) {
-                imageElement.src = `http://localhost:8080/${event.extendedProps.image_url}`;
+                imageElement.src = `https://etika.studio/${event.extendedProps.image_url}`;
                 imageElement.style.display = 'block';
             } else {
                 imageElement.style.display = 'none';
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/reservations', {
+            const response = await fetch('https://etika.studio/api/reservations', {
                 method: 'POST',
                 // headers: {
                 //     'Authorization': `Bearer ${token}` // Tambahkan token jika diperlukan
