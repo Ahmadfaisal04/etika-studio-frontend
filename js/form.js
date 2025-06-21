@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('http://103.84.207.100/api/reservations', {
+            const response = await fetch('https://etika.studio/api/reservations', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}` // Tambahkan token jika endpoint memerlukan autentikasi

@@ -18,7 +18,7 @@
 })();
 
 async function loginUser(username, password) {
-    const url = 'http://103.84.207.100/api/login';
+    const url = 'https://etika.studio/api/login';
     const data = { username, password };
 
     try {
